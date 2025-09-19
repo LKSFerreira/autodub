@@ -1,5 +1,5 @@
 ### **`docs/roadmap.md`**
-```markdown
+
 # Roadmap do Projeto Dublagem AI
 
 Este documento descreve as **milestones** e **issues** planejadas para o desenvolvimento do projeto.
