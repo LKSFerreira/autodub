@@ -1,0 +1,97 @@
+/* Importa uma fonte estilo terminal */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #00ff00; /* Verde neon */
+    --accent-color: #00ff00;
+    --border-color: #008000;
+    --input-bg: #0d0d0d;
+    --scroll-thumb: #005000;
+    --scroll-track: #0a0a0a;
+    --result-color: #f0f0f0; /* Cor para resultados de expressões */
+    --error-color: #ff4d4d; /* Cor para mensagens de erro */
+}
+
+/* Regra global para cálculo de tamanho mais intuitivo */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fira Code', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0; /* Remove a margem padrão do body */
+    overflow: hidden; /* Garante que não haverá scroll na página */
+}
+
+.container {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4), inset 0 0 5px rgba(0, 255, 0, 0.2);
+    padding: 20px;
+    
+    /* MUDANÇAS PARA 100% ALTURA */
+    height: 100vh; /* 100% da altura da viewport */
+    width: 100vw;  /* 100% da largura da viewport */
+    display: flex;
+    flex-direction: column; /* Organiza os itens em coluna */
+}
+
+h1 {
+    color: var(--accent-color);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+    font-size: 2em;
+    flex-shrink: 0; /* Impede que o h1 encolha */
+}
+
+.terminal-output {
+    background-color: #0d0d0d;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-y: auto;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+
+    /* MUDANÇA PARA 100% ALTURA */
+    flex-grow: 1; /* Faz esta div ocupar todo o espaço vertical disponível */
+    min-height: 0; /* Resolve bugs de overflow em layouts flex */
+}
+
+.terminal-output::-webkit-scrollbar { width: 8px; }
+.terminal-output::-webkit-scrollbar-track { background: var(--scroll-track); }
+.terminal-output::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+.terminal-output p { margin: 0; line-height: 1.5; }
+.prompt { color: var(--accent-color); margin-right: 8px; }
+
+.terminal-input {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Impede que o input encolha */
+}
+
+.terminal-input input[type="text"] {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: 'Fira Code', monospace;
+    font-size: 1em;
+    padding: 5px 0;
+    outline: none;
+}
+
+.blink {
+    animation: blink-animation 1s steps(1, start) infinite;
+}
+
+@keyframes blink-animation {
+    50% { opacity: 0; }
+}
