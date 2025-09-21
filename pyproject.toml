@@ -1,0 +1,51 @@
+[tool.poetry]                          # Sessão principal do Poetry: metadados do projeto
+name = "autodub"                       # Nome do pacote/projeto
+version = "0.1.0"                      # Versão inicial (semântica: major.minor.patch)
+description = "Pipeline para auto dublagem..." # Descrição curta do projeto
+authors = ["Lucas Ferreira <lks_ferreira@hotmail.com>"]     # Autor(es) responsável(is)
+license = "MIT"                        # Licença (pode trocar se quiser outro modelo)
+readme = "README.md"                   # Indica que README.md é o texto principal da doc
+packages = [{ include = "autodub", from = "src" }]  
+# Diz ao Poetry que o código-fonte ficará em src/dublagem/ (boa prática moderna)
+
+[tool.poetry.dependencies]             # Dependências de runtime (produção)
+python = "^3.12"                       # Versão mínima do Python aceita (3.10+)
+
+[tool.poetry.group.dev.dependencies]   # Dependências de desenvolvimento/testes
+pytest = "^7.4.0"                      # Framework de testes
+coverage = "^7.3.0"                    # Medição de cobertura de testes
+black = "^23.7.0"                      # Formatador de código automático
+ruff = "^0.0.292"                      # Linter rápido e moderno (substitui flake8/pylint)
+isort = "^5.12.0"                      # Organizador de imports
+
+[build-system]                         # Configurações de build do Poetry
+requires = ["poetry-core"]             # Requer o core do Poetry
+build-backend = "poetry.core.masonry.api" # Backend usado para empacotamento
+
+# ---------------------------
+# Configurações das ferramentas
+# ---------------------------
+
+[tool.black]                           # Config do Black
+line-length = 88                       # Largura máxima por linha (padrão black)
+target-version = ["py310"]             # Target Python 3.10
+skip-string-normalization = false      # Mantém aspas normalizadas (duplas por padrão)
+
+[tool.isort]                           # Config do isort (ordenação de imports)
+profile = "black"                      # Garante compatibilidade com black
+line_length = 88                       # Mesma largura de linha do black
+
+[tool.ruff]                            # Config do Ruff (linter)
+line-length = 88                       # Máximo por linha
+target-version = "py310"               # Compatível com Python 3.10
+select = ["E", "F", "I"]               # Regras: E=erros de estilo, F=erros de código, I=imports
+ignore = []                            # Lista vazia → não ignorar nada
+
+[tool.coverage.run]                    # Config do coverage para execução
+branch = true                          # Medir cobertura de ramos (if/else, etc.)
+source = ["src"]                       # Apontar cobertura só para código em src/
+
+[tool.coverage.report]                 # Config do relatório de coverage
+fail_under = 100                       # Falhar se cobertura < 100%
+show_missing = true                    # Mostrar linhas não cobertas
+skip_covered = true                    # Não mostrar arquivos já 100% cobertos

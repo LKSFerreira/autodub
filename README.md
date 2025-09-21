@@ -16,8 +16,30 @@ Permite converter texto em fala sincronizada, com possibilidade de integração 
 # Clonar repositório
 git clone <URL_DO_REPOSITORIO>
 cd <PASTA_DO_REPOSITORIO>
+```
+
+# Instalar o Poetry
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+```bash
+source ~/.bashrc   # ou source ~/.zshrc
+```
+```bash
+poetry --version
+```
+
+# Observação: Se você preferir, também dá pra instalar com pipx:
+```bash
+pipx install poetry
+```
+
 
 # Instalar dependências
+````bash
 poetry install
 ````
 
