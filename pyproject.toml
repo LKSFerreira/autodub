@@ -28,7 +28,7 @@ build-backend = "poetry.core.masonry.api" # Backend usado para empacotamento
 
 [tool.black]                           # Config do Black
 line-length = 88                       # Largura máxima por linha (padrão black)
-target-version = ["py310"]             # Target Python 3.10
+target-version = ["py312"]             # Target Python 3.10
 skip-string-normalization = false      # Mantém aspas normalizadas (duplas por padrão)
 
 [tool.isort]                           # Config do isort (ordenação de imports)
@@ -37,7 +37,7 @@ line_length = 88                       # Mesma largura de linha do black
 
 [tool.ruff]                            # Config do Ruff (linter)
 line-length = 88                       # Máximo por linha
-target-version = "py310"               # Compatível com Python 3.10
+target-version = "py312"               # Compatível com Python 3.10
 select = ["E", "F", "I"]               # Regras: E=erros de estilo, F=erros de código, I=imports
 ignore = []                            # Lista vazia → não ignorar nada
 
