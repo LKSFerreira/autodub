@@ -1,0 +1,28 @@
+{
+  "name": "autodub",
+  "version": "1.0.0",
+  "description": "Projeto opensource para dublagem de vídeos baseado em LLM.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LKSFerreira/autodub.git"
+  },
+  "author": "Lucas Ferreira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LKSFerreira/autodub/issues"
+  },
+  "homepage": "https://github.com/LKSFerreira/autodub#readme",
+  "dependencies": {
+    "next": "^15.5.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}
