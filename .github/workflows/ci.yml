@@ -1,0 +1,63 @@
+# .github/workflows/ci.yml
+
+# Nome do workflow que aparecerá na aba "Actions" do GitHub
+name: CI - Teste e Qualidade do Código
+
+# Gatilhos: Define quando este workflow deve rodar automaticamente
+on:
+  # Roda em todo push para a branch 'main'
+  push:
+    branches: [ "main" ]
+  # Roda em toda abertura de Pull Request para a branch 'main'
+  pull_request:
+    branches: [ "main" ]
+
+# Trabalhos: Define uma ou mais tarefas a serem executadas
+jobs:
+  # Nome do nosso único trabalho. Pode ser qualquer nome.
+  build:
+    # Sistema Operacional: Define a máquina virtual onde o trabalho rodará
+    runs-on: ubuntu-latest
+
+    # Passos: Sequência de ações a serem executadas
+    steps:
+      # 1. Checkout do Código
+      # Baixa o código do seu repositório para a máquina virtual
+      - name: 1. Fazer checkout do código
+        uses: actions/checkout@v5
+
+      - name: 2. Configurar Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # CORREÇÃO APLICADA AQUI
+      # 3. Instalar Poetry com o script oficial
+      # Usa o método de instalação via 'curl' e adiciona o Poetry ao PATH do sistema.
+      - name: 3. Instalar Poetry com o script oficial
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          # O passo crucial: Adiciona o diretório do Poetry ao PATH para os passos seguintes
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      # 4. Instalar as dependências do projeto
+      # Instala as bibliotecas listadas no pyproject.toml e poetry.lock
+      - name: 4. Instalar dependências com Poetry
+        run: poetry install --no-interaction --no-root
+
+      # 5. Rodar Linter e Formatador (Verificação)
+      # Verifica se o código está de acordo com as regras de estilo, sem alterá-lo.
+      # O --check faz com que o passo falhe se o código não estiver formatado.
+      - name: 5. Verificar formatação e lint com Ruff e Black
+        run: |
+          poetry run ruff check .
+          poetry run black --check .
+          poetry run isort --check .
+
+      # 6. Rodar os Testes e Verificar Cobertura
+      # Executa os testes com pytest e gera o relatório de cobertura.
+      # O comando 'coverage report' vai falhar se a cobertura for menor que 100%.
+      - name: 6. Rodar testes e validar cobertura de 100%
+        run: |
+          poetry run coverage run -m pytest
+          poetry run coverage report --fail-under=100
