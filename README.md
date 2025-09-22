@@ -1,7 +1,7 @@
 # 🤖 autodub: Pipeline de Dublagem Automática com IA
 
-![CI - Teste e Qualidade do Código](https://github.com/lksferreira/autodub/actions/workflows/ci.yml/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/lksferreira/autodub/badge.svg?branch=main)](https://coveralls.io/github/lksferreira/autodub?branch=main)
+![CI - Teste e Qualidade do Código](https://github.com/LKSFerreira/autodub/actions/workflows/ci.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/LKSFerreira/autodub/badge.svg?branch=main)](https://coveralls.io/github/LKSFerreira/autodub?branch=main)
 [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
