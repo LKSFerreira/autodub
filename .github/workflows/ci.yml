@@ -24,28 +24,41 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: 4. Instalar dependências com Poetry
+      - name: 4. Cache Poetry e pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pip
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: 5. Instalar dependências com Poetry
         run: poetry install --no-interaction
 
-      - name: 5. Verificar formatação e lint com Ruff, Black e isort
+      - name: 6. Verificar formatação e lint com Ruff, Black e isort
         run: |
           poetry run ruff check .
           poetry run black --check .
           poetry run isort --check .
 
-      - name: 6. Rodar testes e gerar dados de cobertura
+      - name: 7. Rodar testes e gerar dados de cobertura
         run: |
           poetry run coverage run --source=autodub -m pytest
           poetry run coverage report -m
           poetry run coverage xml -i
 
-      - name: 7. Enviar relatório de cobertura para o Coveralls
+      - name: 8. Verificar limite mínimo de cobertura
+        run: |
+          # falhará se cobertura < 100%
+          poetry run coverage report -m --fail-under=100
+
+      - name: 9. Enviar relatório de cobertura para o Coveralls
         uses: coverallsapp/github-action@v2
         with:
-          # Usamos o formato Cobertura e o arquivo gerado coverage.xml
           format: cobertura
           file: coverage.xml
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          # Se seu repo é privado ou você prefere usar token do Coveralls, defina o secret
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN || '' }}
