@@ -31,7 +31,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      # CORREÇÃO APLICADA AQUI
       # 3. Instalar Poetry com o script oficial
       # Usa o método de instalação via 'curl' e adiciona o Poetry ao PATH do sistema.
       - name: 3. Instalar Poetry com o script oficial
@@ -47,17 +46,21 @@ jobs:
 
       # 5. Rodar Linter e Formatador (Verificação)
       # Verifica se o código está de acordo com as regras de estilo, sem alterá-lo.
-      # O --check faz com que o passo falhe se o código não estiver formatado.
       - name: 5. Verificar formatação e lint com Ruff e Black
         run: |
           poetry run ruff check .
           poetry run black --check .
           poetry run isort --check .
 
-      # 6. Rodar os Testes e Verificar Cobertura
-      # Executa os testes com pytest e gera o relatório de cobertura.
-      # O comando 'coverage report' vai falhar se a cobertura for menor que 100%.
-      - name: 6. Rodar testes e validar cobertura de 100%
-        run: |
-          poetry run coverage run -m pytest
-          poetry run coverage report --fail-under=100
+      # 6. Rodar os Testes e Gerar Dados de Cobertura
+      # Executa os testes com pytest e gera o arquivo de dados .coverage para o Coveralls.
+      - name: 6. Rodar testes e gerar dados de cobertura
+        run: poetry run coverage run -m pytest
+
+      # 7. Enviar Relatório de Cobertura para o Coveralls
+      # Usa a action do Coveralls para enviar os dados de cobertura.
+      - name: 7. Enviar relatório de cobertura para o Coveralls
+        uses: coverallsapp/github-action@v2
+        # O token é passado de forma segura através dos Secrets do repositório.
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
