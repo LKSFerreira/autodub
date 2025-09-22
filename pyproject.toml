@@ -50,3 +50,7 @@ source = ["src"]                       # Apontar cobertura só para código em s
 fail_under = 100                       # Falhar se cobertura < 100%
 show_missing = true                    # Mostrar linhas não cobertas
 skip_covered = true                    # Não mostrar arquivos já 100% cobertos
+
+[tool.pytest.ini_options]              # Config do pytest
+testpaths = ["tests"]                  # Pasta onde estão os testes
+pythonpath = ["src"]                   # Adiciona src/ ao PYTHONPATH para imports funcionarem

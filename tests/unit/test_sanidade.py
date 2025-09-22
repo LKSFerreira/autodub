@@ -1,8 +1,17 @@
-# tests/unit/teste_sanidade.py
+# tests/unit/test_sanidade.py
+
+import autodub
 
 
-def teste_sanidade():
+def test_sanidade_importacao():
     """
-    Um teste de sanidade básico para garantir que o pytest está funcionando.
+    Garante que o pacote principal pode ser importado.
     """
-    assert True
+    assert autodub is not None
+
+
+def test_versao_pacote():
+    """
+    Verifica se a variável de versão está definida no pacote.
+    """
+    assert autodub.__version__ == "0.1.0"
