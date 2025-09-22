@@ -1,26 +1,16 @@
 # .github/workflows/ci.yml
-
-# Nome do workflow que aparecerá na aba "Actions" do GitHub
 name: CI - Teste e Qualidade do Código
 
-# Gatilhos: Define quando este workflow deve rodar automaticamente
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
-# Trabalhos: Define uma ou mais tarefas a serem executadas
 jobs:
-  # Nome do nosso único trabalho. Pode ser qualquer nome.
   build:
-    # Sistema Operacional: Define a máquina virtual onde o trabalho rodará
     runs-on: ubuntu-latest
-
-    # Passos: Sequência de ações a serem executadas
     steps:
-      # 1. Checkout do Código
-      # Baixa o código do seu repositório para a máquina virtual
       - name: 1. Fazer checkout do código
         uses: actions/checkout@v5
 
@@ -29,39 +19,33 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 3. Instalar Poetry com o script oficial
-      # Usa o método de instalação via 'curl' e adiciona o Poetry ao PATH do sistema.
-      - name: 3. Instalar Poetry com o script oficial
+      - name: 3. Instalar Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-          # O passo crucial: Adiciona o diretório do Poetry ao PATH para os passos seguintes
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # 4. Instalar as dependências do projeto
-      # Instala as bibliotecas listadas no pyproject.toml e poetry.lock
       - name: 4. Instalar dependências com Poetry
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
 
-      # 5. Rodar Linter e Formatador (Verificação)
-      # Verifica se o código está de acordo com as regras de estilo, sem alterá-lo.
-      - name: 5. Verificar formatação e lint com Ruff e Black
+      - name: 5. Verificar formatação e lint com Ruff, Black e isort
         run: |
           poetry run ruff check .
           poetry run black --check .
           poetry run isort --check .
 
-      # 6. Rodar os Testes e Gerar Dados de Cobertura
-      # Executa os testes com pytest e gera o arquivo de dados .coverage para o Coveralls.
       - name: 6. Rodar testes e gerar dados de cobertura
-        run: poetry run coverage run --source=src -m pytest
+        run: |
+          poetry run coverage run --source=autodub -m pytest
+          poetry run coverage report -m
+          poetry run coverage xml -i
 
-      # 7. Enviar Relatório de Cobertura para o Coveralls
-      # CORREÇÃO APLICADA AQUI, conforme a documentação oficial da action
       - name: 7. Enviar relatório de cobertura para o Coveralls
         uses: coverallsapp/github-action@v2
         with:
-          # Token do GitHub para a action se comunicar com a API (enviar comentários em PRs, etc.)
+          # Usamos o formato Cobertura e o arquivo gerado coverage.xml
+          format: cobertura
+          file: coverage.xml
           github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          # Token do Coveralls, lido como variável de ambiente pelo reporter
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          # Se seu repo é privado ou você prefere usar token do Coveralls, defina o secret
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN || '' }}
