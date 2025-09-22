@@ -17,6 +17,7 @@ coverage = "^7.3.0"                    # Medição de cobertura de testes
 black = "^23.7.0"                      # Formatador de código automático
 ruff = "^0.0.292"                      # Linter rápido e moderno (substitui flake8/pylint)
 isort = "^5.12.0"                      # Organizador de imports
+pre-commit = "^4.3.0"
 
 [build-system]                         # Configurações de build do Poetry
 requires = ["poetry-core"]             # Requer o core do Poetry
