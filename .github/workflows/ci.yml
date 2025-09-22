@@ -5,10 +5,8 @@ name: CI - Teste e Qualidade do Código
 
 # Gatilhos: Define quando este workflow deve rodar automaticamente
 on:
-  # Roda em todo push para a branch 'main'
   push:
     branches: [ "main" ]
-  # Roda em toda abertura de Pull Request para a branch 'main'
   pull_request:
     branches: [ "main" ]
 
@@ -55,12 +53,15 @@ jobs:
       # 6. Rodar os Testes e Gerar Dados de Cobertura
       # Executa os testes com pytest e gera o arquivo de dados .coverage para o Coveralls.
       - name: 6. Rodar testes e gerar dados de cobertura
-        run: poetry run coverage run -m pytest
+        run: poetry run coverage run --source=src -m pytest
 
       # 7. Enviar Relatório de Cobertura para o Coveralls
-      # Usa a action do Coveralls para enviar os dados de cobertura.
+      # CORREÇÃO APLICADA AQUI, conforme a documentação oficial da action
       - name: 7. Enviar relatório de cobertura para o Coveralls
         uses: coverallsapp/github-action@v2
-        # O token é passado de forma segura através dos Secrets do repositório.
+        with:
+          # Token do GitHub para a action se comunicar com a API (enviar comentários em PRs, etc.)
+          github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
+          # Token do Coveralls, lido como variável de ambiente pelo reporter
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
