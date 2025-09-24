@@ -1,3 +1,4 @@
+/* style.css */
 /* Importa uma fonte estilo terminal */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
@@ -13,17 +14,14 @@
     --error-color: #ff4d4d; /* Cor para mensagens de erro */
 }
 
-/* Regra global para cálculo de tamanho mais intuitivo */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
     font-family: 'Fira Code', monospace;
     background-color: var(--bg-color);
     color: var(--text-color);
-    margin: 0; /* Remove a margem padrão do body */
-    overflow: hidden; /* Garante que não haverá scroll na página */
+    margin: 0;
+    overflow: hidden;
 }
 
 .container {
@@ -31,12 +29,10 @@ body {
     border: 1px solid var(--border-color);
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.4), inset 0 0 5px rgba(0, 255, 0, 0.2);
     padding: 20px;
-    
-    /* MUDANÇAS PARA 100% ALTURA */
-    height: 100vh; /* 100% da altura da viewport */
-    width: 100vw;  /* 100% da largura da viewport */
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    flex-direction: column; /* Organiza os itens em coluna */
+    flex-direction: column;
 }
 
 h1 {
@@ -46,8 +42,20 @@ h1 {
     margin-bottom: 20px;
     text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
     font-size: 2em;
-    flex-shrink: 0; /* Impede que o h1 encolha */
+    flex-shrink: 0;
+    white-space: nowrap; /* evita quebra entre spans */
 }
+
+.fixed-prefix { color: var(--accent-color); }
+
+.sim-cursor {
+    display: inline-block;
+    opacity: 1;
+    animation: blink-animation 1s steps(1, start) infinite;
+    margin-left: 0; /* cursor grudado na última letra */
+}
+
+@keyframes blink-animation { 50% { opacity: 0; } }
 
 .terminal-output {
     background-color: #0d0d0d;
@@ -59,10 +67,8 @@ h1 {
     white-space: pre-wrap;
     word-break: break-all;
     box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
-
-    /* MUDANÇA PARA 100% ALTURA */
-    flex-grow: 1; /* Faz esta div ocupar todo o espaço vertical disponível */
-    min-height: 0; /* Resolve bugs de overflow em layouts flex */
+    flex-grow: 1;
+    min-height: 0;
 }
 
 .terminal-output::-webkit-scrollbar { width: 8px; }
@@ -71,13 +77,9 @@ h1 {
 .terminal-output p { margin: 0; line-height: 1.5; }
 .prompt { color: var(--accent-color); margin-right: 8px; }
 
-.terminal-input {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0; /* Impede que o input encolha */
-}
+.terminal-input { display: flex; align-items: center; flex-shrink: 0; gap: 8px; }
 
-.terminal-input input[type="text"] {
+textarea#entrada-comando {
     flex-grow: 1;
     background-color: transparent;
     border: none;
@@ -86,12 +88,14 @@ h1 {
     font-size: 1em;
     padding: 5px 0;
     outline: none;
+    resize: none; /* impede redimensionamento manual */
+    min-height: 1.2em;
+    max-height: 40vh; /* corresponde ao limite usado no JS */
+    overflow-y: hidden; /* o JS alterna para auto se passar do limite */
+    line-height: 1.2em;
 }
 
-.blink {
-    animation: blink-animation 1s steps(1, start) infinite;
-}
-
-@keyframes blink-animation {
-    50% { opacity: 0; }
+/* simples acessibilidade: foco mais visível */
+textarea#entrada-comando:focus {
+    outline: 1px dashed rgba(0,255,0,0.15);
 }
