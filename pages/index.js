@@ -4,6 +4,10 @@
 
 import fs from 'fs';
 import path from 'path';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
+SpeedInsights();
+
 
 export async function getServerSideProps() {
   const pastaPyodide = path.join(process.cwd(), 'pyodide');
