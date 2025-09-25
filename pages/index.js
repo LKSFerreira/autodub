@@ -5,9 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-SpeedInsights();
-
+import { Analytics } from "@vercel/analytics/next"
 
 export async function getServerSideProps() {
   const pastaPyodide = path.join(process.cwd(), 'pyodide');
@@ -55,11 +53,17 @@ export default function Home({ srcDoc, erro }) {
   // Se houve erro ao ler os arquivos, mostra a mensagem
   if (erro) {
     return (
-      <main style={{ padding: 20, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}>
-        <h2>Erro ao carregar os arquivos do diretório <code>pyodide</code></h2>
-        <pre style={{ whiteSpace: 'pre-wrap', color: 'crimson' }}>{erro}</pre>
-        <p>Verifique se a pasta <code>./pyodide</code> existe e contém index.html, style.css e script.js.</p>
-      </main>
+      <>
+        <main style={{ padding: 20, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}>
+          <h2>Erro ao carregar os arquivos do diretório <code>pyodide</code></h2>
+          <pre style={{ whiteSpace: 'pre-wrap', color: 'crimson' }}>{erro}</pre>
+          <p>Verifique se a pasta <code>./pyodide</code> existe e contém index.html, style.css e script.js.</p>
+        </main>
+        <footer>
+          <SpeedInsights />
+          <Analytics />
+        </footer>
+      </>
     );
   }
 
