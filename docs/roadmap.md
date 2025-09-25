@@ -19,12 +19,12 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 **Escopo:** Configuração inicial do repositório com linting e testes automatizados.
 
 **Tarefas:**
-- Criar `pyproject.toml` com dependências mínimas (pytest, coverage, ruff, black, isort)
-- Criar estrutura de pastas: `src/dublagem/`, `tests/unit/`, `docs/`, `.github/workflows/`
-- Adicionar `.pre-commit-config.yaml` com hooks (black, ruff, isort)
-- Adicionar workflow GitHub Actions (`ci.yml`) rodando lint, pytest e coverage
-- Criar `README.md` inicial
-- Criar `tests/unit/test_sanity.py` com `assert True`
+- ✅ Criar `pyproject.toml` com dependências mínimas (pytest, coverage, ruff, black, isort)
+- ✅ Criar estrutura de pastas: `src/dublagem/`, `tests/unit/`, `docs/`, `.github/workflows/`
+- ✅ Adicionar `.pre-commit-config.yaml` com hooks (black, ruff, isort)
+- ✅ Adicionar workflow GitHub Actions (`ci.yml`) rodando lint, pytest e coverage
+- ✅ Criar `README.md` inicial
+- ✅ Criar `tests/unit/test_sanity.py` com `assert True`
 
 **Critérios de aceitação:**
 - `poetry install` e `pytest` rodam sem erros
@@ -39,13 +39,13 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 
 **Tarefas:**
 - Criar arquivos:
-  - `asr_interface.py` → `class IAsr(Protocol)` com método `transcrever`
-  - `tts_interface.py` → `class ITts(Protocol)` com método `sintetizar`
-  - `embedding_interface.py` → `class IEmbeddingExtractor(Protocol)` com método `extrair`
-  - `alignment_interface.py` → `class IAlignment(Protocol)` com método `alinhar`
-- Adicionar docstrings em pt-BR
-- Criar `tests/unit/test_interfaces.py` com mocks de exemplo
-- Garantir 100% de coverage
+  - ✅ `asr_interface.py` → `class IAsr(Protocol)` com método `transcrever`
+  - ✅ `tts_interface.py` → `class ITts(Protocol)` com método `sintetizar`
+  - ✅ `embedding_interface.py` → `class IEmbeddingExtractor(Protocol)` com método `extrair`
+  - ✅ `alignment_interface.py` → `class IAlignment(Protocol)` com método `alinhar`
+- ✅ Adicionar docstrings em pt-BR
+- ✅ Criar `tests/unit/test_interfaces.py` com mocks de exemplo
+- ✅ Garantir 100% de coverage
 
 **Critérios de aceitação:**
 - Docstrings em pt-BR presentes
@@ -68,7 +68,7 @@ Construir pipeline inicial com mocks para validar fluxo ponta a ponta sem depend
 **Escopo:** Mock de todos os módulos principais.
 
 **Tarefas:**
-- Criar `src/dublagem/implementations/mocks/`
+- ✅ Criar `src/dublagem/implementations/mocks/`
 - Implementar `mock_asr.py`, `mock_tts.py`, `mock_embedding.py`, `mock_vocoder.py`
 - Criar `ffmpeg_wrapper.py` fake
 - Escrever testes unitários validando saídas determinísticas
