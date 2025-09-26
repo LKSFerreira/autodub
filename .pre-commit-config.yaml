@@ -6,7 +6,7 @@ default_language_version:
 repos:
   # 1. RUFF RODA PRIMEIRO para linting e correções automáticas.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1 
+    rev: v0.13.2 
     hooks:
       # Hook para o linter. A opção --fix tenta corrigir os erros.
       - id: ruff-check
