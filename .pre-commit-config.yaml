@@ -1,7 +1,7 @@
 # .pre-commit-config.yaml
 
 default_language_version:
-    python: python3.12
+    python: python3.13
 
 repos:
   # 1. RUFF RODA PRIMEIRO para linting e correções automáticas.

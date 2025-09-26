@@ -36,30 +36,44 @@ Siga os passos abaixo para configurar seu ambiente de desenvolvimento.
 
 ### Configuração do Ambiente
 
-1.  **Clone o Repositório:**
-    ```bash
-    git clone [https://github.com/](https://github.com/)lksferreira/autodub.git
-    cd autodub
-    ```
+**Clone o Repositório:**
+```bash
+git clone https://github.com/LKSFerreira/autodub.git
+cd autodub
+```
 
-2. **Instale o Poetry**
+#### Execute o script bash `configure_repo.sh` localizado na raiz do projeto:
+```bash
+./configure_repo.sh
+```
+---
+#### Configuração Manual do ambiente após clonar o repositório:
+1. **Instale o Poetry**
     ```bash
     pipx install poetry
     ```
 
-3.  **Instale as Dependências:**
+2. **Configura o ambiente para criar ambientes virtuais dentro da pasta do projeto:**
+    ```bash
+    poetry config virtualenvs.in-project true
+    ```
+
+2.  **Instale as Dependências:**
     O Poetry criará um ambiente virtual e instalará todas as dependências listadas no `pyproject.toml`.
     ```bash
     poetry install
     ```
 
-4.  **Instale os Hooks de Git (Passo Crucial!):**
+3.  **Instale os Hooks de Git (Passo Crucial!):**
     Este comando ativa a automação de qualidade de código local. Ele rodará `ruff`, `black` e `isort` automaticamente antes de cada commit. **É obrigatório rodá-lo uma vez após clonar o projeto.**
     ```bash
     poetry run pre-commit install
     ```
 
-Seu ambiente está pronto!
+
+🎉🎉 **Seu ambiente está pronto !** 🎉🎉
+
+---
 
 ## 🧪 Rodando os Testes
 
