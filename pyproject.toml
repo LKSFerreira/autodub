@@ -39,6 +39,8 @@ line_length = 88                       # Mesma largura de linha do black
 [tool.ruff]                            # Config do Ruff (linter)
 line-length = 88                       # Máximo por linha
 target-version = "py312"               # Compatível com Python 3.12
+
+[tool.ruff.lint]
 select = ["E", "F", "I"]               # Regras: E=erros de estilo, F=erros de código, I=imports
 ignore = []                            # Lista vazia → não ignorar nada
 
