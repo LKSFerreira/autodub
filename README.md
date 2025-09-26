@@ -42,13 +42,18 @@ Siga os passos abaixo para configurar seu ambiente de desenvolvimento.
     cd autodub
     ```
 
-2.  **Instale as Dependências:**
+2. **Instale o Poetry**
+    ```bash
+    pipx install poetry
+    ```
+
+3.  **Instale as Dependências:**
     O Poetry criará um ambiente virtual e instalará todas as dependências listadas no `pyproject.toml`.
     ```bash
     poetry install
     ```
 
-3.  **Instale os Hooks de Git (Passo Crucial!):**
+4.  **Instale os Hooks de Git (Passo Crucial!):**
     Este comando ativa a automação de qualidade de código local. Ele rodará `ruff`, `black` e `isort` automaticamente antes de cada commit. **É obrigatório rodá-lo uma vez após clonar o projeto.**
     ```bash
     poetry run pre-commit install
