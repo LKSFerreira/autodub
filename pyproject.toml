@@ -15,7 +15,7 @@ python = "^3.12"                       # Versão mínima do Python aceita (3.10+
 pytest = "^7.4.0"                      # Framework de testes
 coverage = "^7.3.0"                    # Medição de cobertura de testes
 black = "^23.7.0"                      # Formatador de código automático
-ruff = "^0.0.292"                      # Linter rápido e moderno (substitui flake8/pylint)
+ruff = "^0.13.2"                      # Linter rápido e moderno (substitui flake8/pylint)
 isort = "^5.12.0"                      # Organizador de imports
 pre-commit = "^4.3.0"
 
