@@ -42,9 +42,9 @@ git clone https://github.com/LKSFerreira/autodub.git
 cd autodub
 ```
 
-#### Execute o script bash `configure_repo.sh` localizado na raiz do projeto:
+#### Execute o script bash com SOURCE `configure_repo.sh` localizado na raiz do projeto:
 ```bash
-./configure_repo.sh
+source ./configure_repo.sh
 ```
 ---
 #### Configuração Manual do ambiente após clonar o repositório:
