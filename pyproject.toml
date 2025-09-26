@@ -9,7 +9,7 @@ packages = [{ include = "autodub", from = "src" }]
 # Diz ao Poetry que o código-fonte ficará em src/dublagem/ (boa prática moderna)
 
 [tool.poetry.dependencies]             # Dependências de runtime (produção)
-python = "^3.13"                       # Versão mínima do Python aceita (3.10+)
+python = "^3.12"                       # Versão mínima do Python aceita (3.10+)
 
 [tool.poetry.group.dev.dependencies]   # Dependências de desenvolvimento/testes
 pytest = "^7.4.0"                      # Framework de testes
