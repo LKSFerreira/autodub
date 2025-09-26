@@ -14,10 +14,10 @@ jobs:
       - name: 1. Fazer checkout do código
         uses: actions/checkout@v5
 
-      - name: 2. Configurar Python 3.13
+      - name: 2. Configurar Python 3.12
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - name: 3. Instalar Poetry
         run: |
