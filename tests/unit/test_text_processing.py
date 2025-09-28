@@ -29,6 +29,13 @@ def test_normalizar_texto_casefold():
     assert resultado == "python é legal"
 
 
+def test_normalizar_texto_type_error():
+    with pytest.raises(TypeError):
+        normalizar_texto(None)
+    with pytest.raises(TypeError):
+        normalizar_texto(123)
+
+
 # ------------------------
 # Testes de inserir_pontuacao
 # ------------------------
@@ -55,3 +62,10 @@ def test_inserir_pontuacao_remove_espacos_finais():
     texto = "teste   "
     resultado = inserir_pontuacao(texto)
     assert resultado == "teste."
+
+
+def test_inserir_pontuacao_type_error():
+    with pytest.raises(TypeError):
+        inserir_pontuacao(None)
+    with pytest.raises(TypeError):
+        inserir_pontuacao(456)
