@@ -26,6 +26,8 @@ A arquitetura é modular e projetada para ser extensível, com uma base sólida 
 
 ## 🚀 Começando
 
+- #### ***Recomendo fortente que use o CODESPACE do Github ou um ambiente Linux***
+
 Siga os passos abaixo para configurar seu ambiente de desenvolvimento.
 
 ### Pré-requisitos
@@ -69,6 +71,23 @@ source ./configure_repo.sh
     ```bash
     poetry run pre-commit install
     ```
+
+4.  **Instalando o ffmpeg**
+    O `ffmpeg` é necessário para manipulação de arquivos de áudio e vídeo. Instale-o conforme o sistema operacional:
+
+    - **Ubuntu/Debian:**
+      ```bash
+      sudo apt update
+      sudo apt install ffmpeg
+      ```
+
+    - **macOS (usando Homebrew):**
+      ```bash
+      brew install ffmpeg
+      ```
+
+    - **Windows:**
+      Baixe o executável do [site oficial do FFmpeg](https://ffmpeg.org/download.html) e siga as instruções de instalação.
 
 
 🎉🎉 **Seu ambiente está pronto !** 🎉🎉
