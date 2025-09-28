@@ -17,7 +17,7 @@
 set -e
 
 # --- Passo 1: Instalar o Poetry ---
-echo "--> Passo 1/5: Verificando e instalando o Poetry..."
+echo "--> Passo 1/6: Verificando e instalando o Poetry..."
 if ! command -v poetry &> /dev/null
 then
     echo "Poetry não encontrado. Instalando..."
@@ -28,19 +28,31 @@ else
 fi
 
 # --- Passo 2: Configurar a criação do ambiente virtual localmente ---
-echo "--> Passo 2/5: Configurando Poetry para criar ambiente virtual no projeto..."
+echo "--> Passo 2/6: Configurando Poetry para criar ambiente virtual no projeto..."
 poetry config virtualenvs.in-project true
 
 # --- Passo 3: Instalar as dependências do projeto ---
-echo "--> Passo 3/5: Instalando dependências do projeto com Poetry..."
+echo "--> Passo 3/6: Instalando dependências do projeto com Poetry..."
 poetry install
 
 # --- Passo 4: Instalar os hooks do pre-commit ---
-echo "--> Passo 4/5: Instalando hooks de pre-commit..."
+echo "--> Passo 4/6: Instalando hooks de pre-commit..."
 poetry run pre-commit install
 
 # --- Passo 5: Ativar o ambiente virtual ---
-echo "--> Passo 5/5: Ativando o ambiente virtual..."
+echo "--> Passo 5/6: Ativando o ambiente virtual..."
+
+# --- Passo 6: Instalar o ffmpeg no caodespace (UBUNTO) se necessário ---
+if [[ "$(uname -a)" == *"codespace"* ]]; then
+    echo "--> Passo 6/6: Instalando ffmpeg no Codespace..."
+    sudo apt-get update -y
+    sudo apt-get install ffmpeg -y
+    echo "ffmpeg instalado com sucesso."
+else
+    echo "--> Passo 6/6: Pulando instalação do ffmpeg (não está em um Codespace)."
+fi
+
+
 
 ACTIVATION_SCRIPT_PATH=""
 
