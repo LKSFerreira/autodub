@@ -67,3 +67,20 @@ def test_init_model_name(monkeypatch):
     asr = WhisperAsr(model_name="base")
     assert asr.model == "FAKE_MODEL"
     assert asr.model_name == "base"
+
+
+# No final do arquivo tests/unit/test_whisper_asr.py
+
+
+@pytest.mark.integration  # Marcador para testes de integração - boas práticas
+def test_integracao_carregamento_real_modelo():
+    """
+    Testa a integração real com a biblioteca whisper, carregando um modelo.
+    Este teste vai ser mais lento e pode precisar baixar o modelo na primeira vez.
+    """
+    try:
+        # Tenta carregar um modelo real (o menor possível para o teste ser rápido)
+        asr = WhisperAsr(model_name="tiny")
+        assert asr.model is not None
+    except Exception as e:
+        pytest.fail(f"Teste de integração falhou ao carregar o modelo real: {e}")
