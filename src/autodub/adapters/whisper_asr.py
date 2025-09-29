@@ -27,9 +27,17 @@ class WhisperAsr(IAsr):
         Returns:
             list[dict]: Lista de segmentos no formato
                         {"texto": str, "inicio": float, "fim": float}
+
+        Raises:
+            RuntimeError: Se a transcrição com o Whisper falhar.
         """
-        result = self.model.transcribe(audio_path)
-        return [
-            {"texto": seg["text"], "inicio": seg["start"], "fim": seg["end"]}
-            for seg in result["segments"]
-        ]
+        try:
+            # Tenta executar a transcrição
+            result = self.model.transcribe(audio_path)
+            return [
+                {"texto": seg["text"], "inicio": seg["start"], "fim": seg["end"]}
+                for seg in result["segments"]
+            ]
+        except Exception as e:
+            # Se qualquer erro ocorrer, captura e lança um erro padronizado
+            raise RuntimeError("Falha na transcrição com Whisper") from e
