@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.mock_vocoder import MockVocoder
+from autodub.adapters.mocks.mock_vocoder import MockVocoder
 
 
 def test_sintetizar_from_mel_retorna_bytes():

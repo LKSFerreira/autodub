@@ -1,11 +1,11 @@
 import importlib
 
 MODULES = [
-    "autodub.implementations.mocks.mock_asr",
-    "autodub.implementations.mocks.mock_tts",
-    "autodub.implementations.mocks.mock_embedding",
-    "autodub.implementations.mocks.mock_vocoder",
-    "autodub.implementations.mocks.ffmpeg_wrapper",
+    "autodub.adapters.mocks.mock_asr",
+    "autodub.adapters.mocks.mock_tts",
+    "autodub.adapters.mocks.mock_embedding",
+    "autodub.adapters.mocks.mock_vocoder",
+    "autodub.adapters.mocks.ffmpeg_wrapper",
 ]
 
 
@@ -16,7 +16,7 @@ def test_modulos_importaveis():
 
 
 def test_classes_existentes():
-    mod = importlib.import_module("autodub.implementations.mocks")
+    mod = importlib.import_module("autodub.adapters.mocks")
     for expected in [
         "MockASR",
         "MockTTS",

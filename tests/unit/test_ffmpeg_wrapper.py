@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.ffmpeg_wrapper import FakeFFmpegWrapper
+from autodub.adapters.mocks.ffmpeg_wrapper import FakeFFmpegWrapper
 
 
 def test_extract_audio_cria_arquivo(tmp_path):

@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.mock_tts import MockTTS
+from autodub.adapters.mocks.mock_tts import MockTTS
 
 
 def test_sintetizar_retorna_bytes():

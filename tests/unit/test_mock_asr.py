@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.mock_asr import MockASR
+from autodub.adapters.mocks.mock_asr import MockASR
 
 
 def test_transcricao_deterministica_para_arquivo_teste():

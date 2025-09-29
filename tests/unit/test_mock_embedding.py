@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.mock_embedding import MockEmbedding
+from autodub.adapters.mocks.mock_embedding import MockEmbedding
 
 
 def test_extrair_embedding_retorna_lista():

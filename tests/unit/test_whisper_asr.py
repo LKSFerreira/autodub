@@ -9,7 +9,7 @@ def test_inicializacao_com_modelo_valido():
     """Deve inicializar corretamente com um modelo válido."""
     with patch("autodub.adapters.whisper_asr.whisper") as mock_whisper:
         mock_whisper.load_model.return_value = MagicMock()
-        asr = WhisperAsr(modelo="tiny")
+        asr = WhisperAsr(model_name="tiny")
         assert asr.model is not None
         mock_whisper.load_model.assert_called_once_with("tiny")
 
@@ -19,7 +19,7 @@ def test_inicializacao_com_erro():
     with patch("autodub.adapters.whisper_asr.whisper") as mock_whisper:
         mock_whisper.load_model.side_effect = Exception("Falha no load")
         with pytest.raises(Exception, match="Falha no load"):
-            WhisperAsr(modelo="tiny")
+            WhisperAsr(model_name="tiny")
 
 
 def test_transcricao_retorna_segmentos():
@@ -34,7 +34,7 @@ def test_transcricao_retorna_segmentos():
 
     with patch("autodub.adapters.whisper_asr.whisper") as mock_whisper:
         mock_whisper.load_model.return_value = mock_model
-        asr = WhisperAsr(modelo="tiny")
+        asr = WhisperAsr(model_name="tiny")
         resultado = asr.transcrever("audio_fake.wav")
 
     assert len(resultado) == 2
@@ -50,7 +50,7 @@ def test_transcricao_com_erro():
 
     with patch("autodub.adapters.whisper_asr.whisper") as mock_whisper:
         mock_whisper.load_model.return_value = mock_model
-        asr = WhisperAsr(modelo="tiny")
+        asr = WhisperAsr(model_name="tiny")
         with pytest.raises(RuntimeError, match="Falha na transcrição com Whisper"):
             asr.transcrever("audio_fake.wav")
 

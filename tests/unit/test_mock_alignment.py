@@ -1,4 +1,4 @@
-from autodub.implementations.mocks.mock_alignment import alinhar_palavras
+from autodub.adapters.mocks.mock_alignment import alinhar_palavras
 
 
 def test_texto_normal():
