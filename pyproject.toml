@@ -57,3 +57,6 @@ skip_covered = true                    # Não mostrar arquivos já 100% cobertos
 [tool.pytest.ini_options]              # Config do pytest
 testpaths = ["tests"]                  # Pasta onde estão os testes
 pythonpath = ["src"]                   # Adiciona src/ ao PYTHONPATH para imports funcionarem
+markers = [
+    "integration: marca testes como integração (pode ser lento)",
+]
