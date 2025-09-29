@@ -140,7 +140,7 @@ class Pipeline:
                         out_f.write(rf.read())
 
             # 5) mux final
-            logger.info("Realizando mux de áudio em vídeo -> %s", output_path)
+            logger.info("Realizando mix de áudio em vídeo -> %s", output_path)
             self.ffmpeg.mux_audio(video_path, combined_audio, str(output_path))
 
             logger.info("Execução concluída, saída em %s", output_path)
