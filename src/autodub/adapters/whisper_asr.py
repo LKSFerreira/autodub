@@ -1,56 +1,35 @@
-"""
-Adapter ASR real usando Whisper.
+# src/autodub/adapters/whisper_asr.py
 
-Implementa a interface IAsr, convertendo áudio em texto.
-"""
-
-import logging
-from typing import Dict, List
-
-import whisper  # Biblioteca externa (precisa ser adicionada em pyproject.toml)
+import whisper
 
 from autodub.interfaces.asr_interface import IAsr
 
-logger = logging.getLogger(__name__)
-
 
 class WhisperAsr(IAsr):
-    """
-    Implementação real de ASR usando OpenAI Whisper.
-    """
-
-    def __init__(self, modelo: str = "tiny"):
+    def __init__(self, model_name: str = "base"):
         """
-        Inicializa o modelo Whisper.
+        Inicializa o adapter do Whisper.
 
         Args:
-            modelo (str): Nome do modelo Whisper (tiny, base, small, medium, large).
+            model_name (str): Nome do modelo do Whisper a ser carregado
+                              (ex.: "tiny", "base", "small", "medium", "large").
         """
-        try:
-            self.model = whisper.load_model(modelo)
-            logger.info("WhisperASR inicializado com modelo: %s", modelo)
-        except Exception as e:
-            logger.error("Falha ao carregar modelo Whisper: %s", e)
-            raise
+        self.model_name = model_name
+        self.model = whisper.load_model(model_name)
 
-    def transcrever(self, audio_path: str) -> List[Dict]:
+    def transcrever(self, audio_path: str):
         """
-        Transcreve um arquivo de áudio para texto.
+        Transcreve o áudio usando Whisper.
 
         Args:
-            audio_path (str): Caminho do arquivo de áudio.
+            audio_path (str): Caminho para o arquivo de áudio.
 
         Returns:
-            List[Dict]: Lista de segmentos contendo texto, inicio e fim.
+            list[dict]: Lista de segmentos no formato
+                        {"texto": str, "inicio": float, "fim": float}
         """
-        try:
-            resultado = self.model.transcribe(audio_path)
-            segmentos = []
-            for seg in resultado.get("segments", []):
-                segmentos.append(
-                    {"texto": seg["text"], "inicio": seg["start"], "fim": seg["end"]}
-                )
-            return segmentos
-        except Exception as e:
-            logger.error("Erro durante transcrição: %s", e)
-            raise RuntimeError("Falha na transcrição com Whisper") from e
+        result = self.model.transcribe(audio_path)
+        return [
+            {"texto": seg["text"], "inicio": seg["start"], "fim": seg["end"]}
+            for seg in result["segments"]
+        ]
