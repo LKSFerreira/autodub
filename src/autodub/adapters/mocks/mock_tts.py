@@ -1,24 +1,37 @@
 import hashlib
+import io
+import math
+import struct
+import wave
 
 
 class MockTTS:
-    """
-    Mock determinístico de TTS (Síntese de Fala).
+    def __init__(self, duration_seconds: float = 0.5, sample_rate: int = 16000):
+        self.duration_seconds = duration_seconds
+        self.sample_rate = sample_rate
 
-    Gera dados binários previsíveis a partir de um texto de entrada,
-    simulando a geração de áudio sem precisar de modelo real.
-    """
-
-    def sintetizar(self, texto: str, voz_id: str | None = None) -> bytes:
+    def sintetizar(self, texto: str) -> bytes:
         """
-        Simula a síntese de fala.
-
-        Args:
-            texto (str): Texto a ser convertido em "áudio".
-            voz_id (str | None): Identificador de voz (opcional).
-
-        Returns:
-            bytes: Dados binários simulando áudio.
+        Gera um WAV válido com onda senoidal.
+        - O conteúdo varia conforme o texto (para os testes passarem).
+        - A duração mínima é 0.1s.
         """
-        hash_val = hashlib.md5(texto.encode("utf-8")).digest()
-        return hash_val
+        # Duração depende do texto
+        dur = max(0.1, self.duration_seconds + (len(texto) % 5) * 0.1)
+        nframes = int(dur * self.sample_rate)
+
+        # Frequência pseudo-aleatória a partir do hash do texto
+        h = int(hashlib.sha1(texto.encode()).hexdigest(), 16)
+        tone = (h % 200) + 200  # entre 200Hz e 400Hz
+
+        buffer = io.BytesIO()
+        with wave.open(buffer, "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)  # 16 bits
+            wf.setframerate(self.sample_rate)
+            for i in range(nframes):
+                sample = int(
+                    32767 * 0.1 * math.sin(2 * math.pi * tone * i / self.sample_rate)
+                )
+                wf.writeframesraw(struct.pack("<h", sample))
+        return buffer.getvalue()
