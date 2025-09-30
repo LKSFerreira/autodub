@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=nextjs,react,python,pythonvanilla,circuitpython,pycharm+all,vuejs
 
 .vscode/
+tests/samples/
 
 ### CircuitPython ###
 .Trashes
