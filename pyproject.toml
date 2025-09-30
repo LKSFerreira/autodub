@@ -29,16 +29,16 @@ build-backend = "poetry.core.masonry.api" # Backend usado para empacotamento
 # ---------------------------
 
 [tool.black]                           # Config do Black
-line-length = 88                       # Largura máxima por linha (padrão black)
+line-length = 96                       # Largura máxima por linha (padrão black)
 target-version = ["py312"]             # Target Python 3.12
 skip-string-normalization = false      # Mantém aspas normalizadas (duplas por padrão)
 
 [tool.isort]                           # Config do isort (ordenação de imports)
 profile = "black"                      # Garante compatibilidade com black
-line_length = 88                       # Mesma largura de linha do black
+line_length = 96                       # Mesma largura de linha do black
 
 [tool.ruff]                            # Config do Ruff (linter)
-line-length = 88                       # Máximo por linha
+line-length = 96                       # Máximo por linha
 target-version = "py312"               # Compatível com Python 3.12
 
 [tool.ruff.lint]
