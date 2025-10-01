@@ -18,8 +18,7 @@ class DummyASR:
 
     def transcrever(self, audio_path: str):
         return [
-            {"texto": f"SEG{i}", "inicio": i, "fim": i + 1}
-            for i in range(self.num_segments)
+            {"texto": f"SEG{i}", "inicio": i, "fim": i + 1} for i in range(self.num_segments)
         ]
 
 
@@ -140,9 +139,7 @@ def test_concatenar_segmentos_erro_ffmpeg(tmp_path, monkeypatch):
             super().__init__(1, "ffmpeg", b"ERRO_FFMPEG")
             self.stderr = b"ERRO_FFMPEG"
 
-    monkeypatch.setattr(
-        subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(FakeError())
-    )
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(FakeError()))
     with pytest.raises(RuntimeError) as exc:
         pipeline._concatenar_segmentos([arq1, arq2], destino)
     assert "Falha ao concatenar segmentos" in str(exc.value)
@@ -245,3 +242,27 @@ def test_colorformatter_debug_branch_coberto(caplog):
     finally:
         logger.setLevel(old_level)
         logger.propagate = old_propagate
+
+
+def test_pipeline_debug_false(tmp_path, monkeypatch):
+    """debug=False deve apenas logar quantidade de segmentos sem salvar arquivo."""
+    asr = DummyASR(num_segments=2)
+    tts = DummyTTS()
+    ffmpeg = DummyFFmpeg()
+    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+
+    # Evita chamar ffmpeg real
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
+
+    video_in = tmp_path / "input.mp4"
+    video_in.write_bytes(b"DUMMY_VIDEO")
+    out = tmp_path / "out.mp4"
+
+    result = pipeline.executar(video_in, out, debug=False)
+
+    assert result.exists()
+    assert result.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
+
+    # garante que não criou transcricao.jsonl no diretório
+    transcript = out.parent / "transcricao.jsonl"
+    assert not transcript.exists()
