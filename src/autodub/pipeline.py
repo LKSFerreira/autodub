@@ -143,7 +143,7 @@ class Pipeline:
         self,
         video_path: Union[str, Path],
         output_path: Union[str, Path],
-        debug: bool = False,
+        debug: bool = True,
     ) -> Path:
         """
         Executa o fluxo de dublagem ponta-a-ponta usando os componentes injetados.
@@ -169,7 +169,7 @@ class Pipeline:
             segmentos: List[Dict] = self.asr.transcrever(str(extracted_audio))
 
             if debug:
-                transcript_file = tmpdir / "transcricao.jsonl"
+                transcript_file = output_path.parent / "transcricao.jsonl"
                 with open(transcript_file, "w", encoding="utf-8") as tf:
                     for seg in segmentos:
                         tf.write(json.dumps(seg, ensure_ascii=False) + "\n")
