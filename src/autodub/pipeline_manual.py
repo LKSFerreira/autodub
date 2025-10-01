@@ -20,7 +20,7 @@ from autodub.pipeline import Pipeline
 
 def main():
     if len(sys.argv) < 2:
-        print("Uso: poetry run python -m autodub.pipeline_manual <video_entrada>")
+        print("Uso: poetry run python -m autodub.pipeline_manual tests/samples/video_teste.mp4")
         sys.exit(1)
 
     video_entrada = Path(sys.argv[1])
@@ -34,17 +34,13 @@ def main():
 
     # Detecta se o ffmpeg do sistema está disponível
     if which("ffmpeg"):
-        from autodub.adapters.real_ffmpeg_wrapper import (
-            RealFFmpegWrapper as FFmpegAdapter,
-        )
+        from autodub.adapters.real_ffmpeg_wrapper import RealFFmpegWrapper as FFmpegAdapter
 
         ffmpeg_adapter = FFmpegAdapter()
         print("ℹ️  ffmpeg detectado no sistema: usando RealFFmpegWrapper")
     else:
         ffmpeg_adapter = FakeFFmpegWrapper()
-        print(
-            "⚠️  ffmpeg não encontrado no PATH: usando FakeFFmpegWrapper (saída falsa)"
-        )
+        print("⚠️  ffmpeg não encontrado no PATH: usando FakeFFmpegWrapper (saída falsa)")
 
     # Monta pipeline com Whisper real para ASR e mocks para o restante
     pipeline = Pipeline(
