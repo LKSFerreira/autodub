@@ -1,101 +1,131 @@
 /* style.css */
 /* Importa uma fonte estilo terminal */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap");
 
 :root {
-    --bg-color: #1a1a1a;
-    --text-color: #00ff00; /* Verde neon */
-    --accent-color: #00ff00;
-    --border-color: #008000;
-    --input-bg: #0d0d0d;
-    --scroll-thumb: #005000;
-    --scroll-track: #0a0a0a;
-    --result-color: #f0f0f0; /* Cor para resultados de expressões */
-    --error-color: #ff4d4d; /* Cor para mensagens de erro */
+  --bg-color: #1a1a1a;
+  --text-color: #00ff00; /* Verde neon */
+  --accent-color: #00ff00;
+  --border-color: #008000;
+  --input-bg: #0d0d0d;
+  --scroll-thumb: #005000;
+  --scroll-track: #0a0a0a;
+  --result-color: #f0f0f0; /* Cor para resultados de expressões */
+  --error-color: #ff4d4d; /* Cor para mensagens de erro */
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
-    font-family: 'Fira Code', monospace;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    margin: 0;
-    overflow: hidden;
+  font-family: "Fira Code", monospace;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  overflow: hidden;
 }
 
 .container {
-    background-color: var(--input-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4), inset 0 0 5px rgba(0, 255, 0, 0.2);
-    padding: 20px;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  box-shadow:
+    0 0 15px rgba(0, 255, 0, 0.4),
+    inset 0 0 5px rgba(0, 255, 0, 0.2);
+  padding: 20px;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
-    color: var(--accent-color);
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 20px;
-    text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
-    font-size: 2em;
-    flex-shrink: 0;
-    white-space: nowrap; /* evita quebra entre spans */
+  color: var(--accent-color);
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+  font-size: 2em;
+  flex-shrink: 0;
+  white-space: nowrap; /* evita quebra entre spans */
 }
 
-.fixed-prefix { color: var(--accent-color); }
+.fixed-prefix {
+  color: var(--accent-color);
+}
 
 .sim-cursor {
-    display: inline-block;
-    opacity: 1;
-    animation: blink-animation 1s steps(1, start) infinite;
-    margin-left: 0; /* cursor grudado na última letra */
+  display: inline-block;
+  opacity: 1;
+  animation: blink-animation 1s steps(1, start) infinite;
+  margin-left: 0; /* cursor grudado na última letra */
 }
 
-@keyframes blink-animation { 50% { opacity: 0; } }
+@keyframes blink-animation {
+  50% {
+    opacity: 0;
+  }
+}
 
 .terminal-output {
-    background-color: #0d0d0d;
-    border: 1px solid var(--border-color);
-    padding: 15px;
-    margin-bottom: 15px;
-    overflow-y: auto;
-    border-radius: 4px;
-    white-space: pre-wrap;
-    word-break: break-all;
-    box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
-    flex-grow: 1;
-    min-height: 0;
+  background-color: #0d0d0d;
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  margin-bottom: 15px;
+  overflow-y: auto;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+  flex-grow: 1;
+  min-height: 0;
 }
 
-.terminal-output::-webkit-scrollbar { width: 8px; }
-.terminal-output::-webkit-scrollbar-track { background: var(--scroll-track); }
-.terminal-output::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
-.terminal-output p { margin: 0; line-height: 1.5; }
-.prompt { color: var(--accent-color); margin-right: 8px; }
+.terminal-output::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-output::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+.terminal-output::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 4px;
+}
+.terminal-output p {
+  margin: 0;
+  line-height: 1.5;
+}
+.prompt {
+  color: var(--accent-color);
+  margin-right: 8px;
+}
 
-.terminal-input { display: flex; align-items: center; flex-shrink: 0; gap: 8px; }
+.terminal-input {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 8px;
+}
 
 textarea#entrada-comando {
-    flex-grow: 1;
-    background-color: transparent;
-    border: none;
-    color: var(--text-color);
-    font-family: 'Fira Code', monospace;
-    font-size: 1em;
-    padding: 5px 0;
-    outline: none;
-    resize: none; /* impede redimensionamento manual */
-    min-height: 1.2em;
-    max-height: 40vh; /* corresponde ao limite usado no JS */
-    overflow-y: hidden; /* o JS alterna para auto se passar do limite */
-    line-height: 1.2em;
+  flex-grow: 1;
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  font-family: "Fira Code", monospace;
+  font-size: 1em;
+  padding: 5px 0;
+  outline: none;
+  resize: none; /* impede redimensionamento manual */
+  min-height: 1.2em;
+  max-height: 40vh; /* corresponde ao limite usado no JS */
+  overflow-y: hidden; /* o JS alterna para auto se passar do limite */
+  line-height: 1.2em;
 }
 
 /* simples acessibilidade: foco mais visível */
 textarea#entrada-comando:focus {
-    outline: 1px dashed rgba(0,255,0,0.15);
+  outline: 1px dashed rgba(0, 255, 0, 0.15);
 }
