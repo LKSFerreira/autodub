@@ -26,7 +26,7 @@ A arquitetura é modular e projetada para ser extensível, com uma base sólida 
 
 ## 🚀 Começando
 
-- #### ***Recomendo fortente que use o CODESPACE do Github ou um ambiente Linux***
+- #### **_Recomendo fortente que use o CODESPACE do Github ou um ambiente Linux_**
 
 Siga os passos abaixo para configurar seu ambiente de desenvolvimento.
 
@@ -39,56 +39,65 @@ Siga os passos abaixo para configurar seu ambiente de desenvolvimento.
 ### Configuração do Ambiente
 
 **Clone o Repositório:**
+
 ```bash
 git clone https://github.com/LKSFerreira/autodub.git
 cd autodub
 ```
 
 #### Execute o script bash com SOURCE `configure_repo.sh` localizado na raiz do projeto:
+
 ```bash
 source ./configure_repo.sh
 ```
+
 ---
+
 #### Configuração Manual do ambiente após clonar o repositório:
+
 1. **Instale o Poetry**
-    ```bash
-    pipx install poetry
-    ```
+
+   ```bash
+   pipx install poetry
+   ```
 
 2. **Configura o ambiente para criar ambientes virtuais dentro da pasta do projeto:**
-    ```bash
-    poetry config virtualenvs.in-project true
-    ```
 
-2.  **Instale as Dependências:**
-    O Poetry criará um ambiente virtual e instalará todas as dependências listadas no `pyproject.toml`.
-    ```bash
-    poetry install
-    ```
+   ```bash
+   poetry config virtualenvs.in-project true
+   ```
 
-3.  **Instale os Hooks de Git (Passo Crucial!):**
-    Este comando ativa a automação de qualidade de código local. Ele rodará `ruff`, `black` e `isort` automaticamente antes de cada commit. **É obrigatório rodá-lo uma vez após clonar o projeto.**
-    ```bash
-    poetry run pre-commit install
-    ```
+3. **Instale as Dependências:**
+   O Poetry criará um ambiente virtual e instalará todas as dependências listadas no `pyproject.toml`.
 
-4.  **Instalando o ffmpeg**
-    O `ffmpeg` é necessário para manipulação de arquivos de áudio e vídeo. Instale-o conforme o sistema operacional:
+   ```bash
+   poetry install
+   ```
 
-    - **Ubuntu/Debian:**
-      ```bash
-      sudo apt update
-      sudo apt install ffmpeg
-      ```
+4. **Instale os Hooks de Git (Passo Crucial!):**
+   Este comando ativa a automação de qualidade de código local. Ele rodará `ruff`, `black` e `isort` automaticamente antes de cada commit. **É obrigatório rodá-lo uma vez após clonar o projeto.**
 
-    - **macOS (usando Homebrew):**
-      ```bash
-      brew install ffmpeg
-      ```
+   ```bash
+   poetry run pre-commit install
+   ```
 
-    - **Windows:**
-      Baixe o executável do [site oficial do FFmpeg](https://ffmpeg.org/download.html) e siga as instruções de instalação.
+5. **Instalando o ffmpeg**
+   O `ffmpeg` é necessário para manipulação de arquivos de áudio e vídeo. Instale-o conforme o sistema operacional:
+   - **Ubuntu/Debian:**
 
+     ```bash
+     sudo apt update
+     sudo apt install ffmpeg
+     ```
+
+   - **macOS (usando Homebrew):**
+
+     ```bash
+     brew install ffmpeg
+     ```
+
+   - **Windows:**
+     Baixe o executável do [site oficial do FFmpeg](https://ffmpeg.org/download.html) e siga as instruções de instalação.
 
 🎉🎉 **Seu ambiente está pronto !** 🎉🎉
 
@@ -101,6 +110,8 @@ Para garantir que tudo está funcionando corretamente, execute a suíte de teste
 - **Executar todos os testes:**
   ```bash
   poetry run pytest
+  ```
+
 ````
 
   - **Executar os testes e gerar o relatório de cobertura:**
@@ -131,3 +142,4 @@ Este projeto é distribuído sob a licença MIT. Veja o arquivo `LICENSE` para m
 
 ```
 ```
+````
