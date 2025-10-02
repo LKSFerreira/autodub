@@ -1,0 +1,7 @@
+ # Aponta que este é o arquivo esta no diretório raiz
+root = true
+
+# Define o estilo para todos os arquivos
+[*.js, *.css, *.html, *.ts]
+indent_style = space
+indent_size = 2

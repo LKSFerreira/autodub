@@ -1,12 +1,12 @@
 # .pre-commit-config.yaml
 
 default_language_version:
-    python: python3.12
+  python: python3.12
 
 repos:
   # 1. RUFF RODA PRIMEIRO para linting e correções automáticas.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.2 
+    rev: v0.13.2
     hooks:
       # Hook para o linter. A opção --fix tenta corrigir os erros.
       - id: ruff-check
@@ -19,7 +19,7 @@ repos:
 
   # 2. ISORT RODA EM SEGUIDA para organizar os imports.
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1 
+    rev: 6.0.1
     hooks:
       - id: isort
         name: isort (organização de imports)
