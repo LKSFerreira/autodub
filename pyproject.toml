@@ -11,6 +11,7 @@ packages = [{ include = "autodub", from = "src" }]
 [tool.poetry.dependencies]             # Dependências de runtime (produção)
 python = "^3.12"                       # Versão mínima do Python aceita (3.10+)
 openai-whisper = "^20250625"
+resemblyzer = "^0.1.4"
 
 [tool.poetry.group.dev.dependencies]   # Dependências de desenvolvimento/testes
 pytest = "^8.4.2"                      # Framework de testes
