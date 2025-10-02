@@ -39,9 +39,7 @@ class RealFFmpegWrapper:
             out_audio_path,
         ]
         try:
-            subprocess.run(
-                cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE
-            )
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
             logger.debug(
                 "RealFFmpegWrapper.extract_audio executado com sucesso: %s",
                 out_audio_path,
@@ -77,9 +75,7 @@ class RealFFmpegWrapper:
             out_video_path,
         ]
         try:
-            subprocess.run(
-                cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE
-            )
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
             logger.debug(
                 "RealFFmpegWrapper.mux_audio executado com sucesso: %s", out_video_path
             )

@@ -25,6 +25,4 @@ class MockASR:
                 {"texto": "MockASR funcionando.", "inicio": 1.5, "fim": 3.0},
             ]
 
-        return [
-            {"texto": f"Arquivo processado: {audio_path}", "inicio": 0.0, "fim": 2.0}
-        ]
+        return [{"texto": f"Arquivo processado: {audio_path}", "inicio": 0.0, "fim": 2.0}]

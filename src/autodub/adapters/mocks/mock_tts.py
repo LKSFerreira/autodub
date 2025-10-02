@@ -30,8 +30,6 @@ class MockTTS:
             wf.setsampwidth(2)  # 16 bits
             wf.setframerate(self.sample_rate)
             for i in range(nframes):
-                sample = int(
-                    32767 * 0.1 * math.sin(2 * math.pi * tone * i / self.sample_rate)
-                )
+                sample = int(32767 * 0.1 * math.sin(2 * math.pi * tone * i / self.sample_rate))
                 wf.writeframesraw(struct.pack("<h", sample))
         return buffer.getvalue()
