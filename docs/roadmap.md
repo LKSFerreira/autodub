@@ -19,6 +19,7 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 **Escopo:** Configuração inicial do repositório com linting e testes automatizados.
 
 **Tarefas:**
+
 - ✅ Criar `pyproject.toml` com dependências mínimas (pytest, coverage, ruff, black, isort)
 - ✅ Criar estrutura de pastas: `src/dublagem/`, `tests/unit/`, `docs/`, `.github/workflows/`
 - ✅ Adicionar `.pre-commit-config.yaml` com hooks (black, ruff, isort)
@@ -27,6 +28,7 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 - ✅ Criar `tests/unit/test_sanity.py` com `assert True`
 
 **Critérios de aceitação:**
+
 - `poetry install` e `pytest` rodam sem erros
 - `coverage run -m pytest && coverage report --fail-under=100` passa
 - CI no GitHub executa e passa
@@ -38,6 +40,7 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 **Escopo:** Criação de 4 interfaces principais em `src/dublagem/interfaces/`.
 
 **Tarefas:**
+
 - Criar arquivos:
   - ✅ `asr_interface.py` → `class IAsr(Protocol)` com método `transcrever`
   - ✅ `tts_interface.py` → `class ITts(Protocol)` com método `sintetizar`
@@ -48,6 +51,7 @@ Preparar o ambiente do projeto com esqueleto de repositório, dependências bás
 - ✅ Garantir 100% de coverage
 
 **Critérios de aceitação:**
+
 - Docstrings em pt-BR presentes
 - Testes validam conformidade
 - `coverage --fail-under=100` passa
@@ -68,12 +72,14 @@ Construir pipeline inicial com mocks para validar fluxo ponta a ponta sem depend
 **Escopo:** Mock de todos os módulos principais.
 
 **Tarefas:**
+
 - ✅ Criar `src/dublagem/implementations/mocks/`
 - Implementar `mock_asr.py`, `mock_tts.py`, `mock_embedding.py`, `mock_vocoder.py`
 - Criar `ffmpeg_wrapper.py` fake
 - Escrever testes unitários validando saídas determinísticas
 
 **Critérios de aceitação:**
+
 - Mocks retornam dados consistentes
 - Testes unitários cobrem 100%
 - Lint + coverage OK
@@ -84,12 +90,14 @@ Construir pipeline inicial com mocks para validar fluxo ponta a ponta sem depend
 **Escopo:** Implementação da `Pipeline` com dependency injection
 
 **Tarefas:**
+
 - Criar `src/dublagem/pipeline.py`
 - Implementar classe `Pipeline` com método `executar(video_path, output_path)`
 - Criar `tests/unit/test_pipeline.py` simulando fluxo completo com mocks
 - Garantir geração de arquivo final fake
 
 **Critérios de aceitação:**
+
 - Pipeline roda ponta a ponta com mocks
 - Testes cobrem fluxo e erros
 - Coverage 100%
@@ -109,11 +117,13 @@ Adicionar sincronização entre texto e áudio, ainda com mocks, garantindo que 
 **Escopo:** Mock que gera `{palavra, start, end}`
 
 **Tarefas:**
+
 - Criar `mock_alignment.py` em `mocks/`
 - Implementar função de alinhamento falso
 - Escrever testes validando consistência (ordem, sem sobreposição)
 
 **Critérios de aceitação:**
+
 - Mock gera timestamps válidos
 - Testes cobrem casos de borda
 - Coverage 100%
@@ -124,11 +134,13 @@ Adicionar sincronização entre texto e áudio, ainda com mocks, garantindo que 
 **Escopo:** Funções auxiliares em `utils/text_processing.py`
 
 **Tarefas:**
+
 - Implementar `normalizar_texto` e `inserir_pontuacao`
 - Escrever `test_text_processing.py`
 - Cobrir casos de borda (texto vazio, múltiplos espaços)
 
 **Critérios de aceitação:**
+
 - Funções tratam entradas irregulares
 - Testes cobrem cenários comuns e extremos
 - Coverage 100%
@@ -148,12 +160,14 @@ Trocar gradualmente mocks por modelos reais (Whisper, Resemblyzer, YourTTS, Wav2
 **Escopo:** Adapter que implementa `IAsr`
 
 **Tarefas:**
+
 - Criar `whisper_asr.py`
 - Implementar `transcrever` usando Whisper
 - Criar testes com mocks
 - Documentar instalação no README
 
 **Critérios de aceitação:**
+
 - Adapter roda com áudio curto real
 - Testes unitários passam com mocks
 - Coverage 100%
@@ -164,12 +178,14 @@ Trocar gradualmente mocks por modelos reais (Whisper, Resemblyzer, YourTTS, Wav2
 **Escopo:** Adapter que implementa `IEmbeddingExtractor`
 
 **Tarefas:**
+
 - Criar `embedding_extractor.py`
 - Implementar `extrair` usando Resemblyzer/ECAPA
 - Criar testes com mocks
 - Documentar dependências extras
 
 **Critérios de aceitação:**
+
 - Adapter gera embedding real
 - Testes unitários com mocks
 - Coverage 100%
@@ -180,12 +196,14 @@ Trocar gradualmente mocks por modelos reais (Whisper, Resemblyzer, YourTTS, Wav2
 **Escopo:** Adapter que implementa `ITts`
 
 **Tarefas:**
+
 - Criar `tts_converter.py`
 - Implementar `sintetizar` usando modelo condicional (YourTTS/so-vits-svc/VITS)
 - Escrever testes com mocks
 - Documentar dependências
 
 **Critérios de aceitação:**
+
 - Gera áudio real condicionado
 - Testes unitários com mocks
 - Coverage 100%
@@ -196,12 +214,14 @@ Trocar gradualmente mocks por modelos reais (Whisper, Resemblyzer, YourTTS, Wav2
 **Escopo:** Etapa opcional na pipeline
 
 **Tarefas:**
+
 - Criar `wav2lip_sync.py`
 - Integrar Wav2Lip na pipeline
 - Testar com vídeo curto real
 - Criar mocks para manter coverage
 
 **Critérios de aceitação:**
+
 - Pipeline sincroniza lábios em exemplo real
 - Testes unitários cobrem mock
 - Coverage 100%
