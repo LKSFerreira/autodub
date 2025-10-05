@@ -29,6 +29,7 @@ RED = "\033[91m"
 EMOJIS = {
     "criando diretório temporário": "📂",
     "extraindo áudio": "🎵",
+    "áudio extraído": "🎵",
     "extraindo embedding": "🧠",
     "embedding extraído": "✨",
     "embedding salvo": "💾",
@@ -71,12 +72,21 @@ class ColorFormatter(logging.Formatter):
 
 
 def setup_logger():
+    logging.captureWarnings(True)
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(ColorFormatter())
+
+    # logger da pipeline
     logger = logging.getLogger("autodub.pipeline")
     logger.setLevel(logging.INFO)
     logger.handlers = [handler]
     logger.propagate = False
+
+    # logger de warnings
+    warnings_logger = logging.getLogger("py.warnings")
+    warnings_logger.handlers = [handler]
+    warnings_logger.propagate = False  # não mostrar warnings duplicados
+
     return logger
 
 
@@ -158,6 +168,7 @@ class Pipeline:
         """
         output_path = Path(output_path)
         tmpdir = Path(tempfile.mkdtemp(prefix="autodub_pipeline_"))
+        logger.info("Criando diretório temporário em %s", tmpdir)
 
         try:
             combined_audio = tmpdir / "combined_audio.wav"
@@ -171,7 +182,7 @@ class Pipeline:
             if debug:
                 debug_audio_copy = output_path.parent / "audio_extraido.wav"
                 shutil.copyfile(extracted_audio, debug_audio_copy)
-                logger.info("🎵 Áudio extraído salvo para debug em %s", debug_audio_copy)
+                logger.info("Áudio extraído salvo para debug em %s", debug_audio_copy)
 
             # 1.5) extrair embedding do locutor (apenas se houver adapter)
             if self.embedding:
@@ -201,9 +212,11 @@ class Pipeline:
 
             if debug:
                 transcript_file = output_path.parent / "transcricao.jsonl"
-                with open(transcript_file, "w", encoding="utf-8") as tf:
+                with open(transcript_file, "w", encoding="utf-8") as transcript_file_in_memory:
                     for seg in segmentos:
-                        tf.write(json.dumps(seg, ensure_ascii=False) + "\n")
+                        transcript_file_in_memory.write(
+                            json.dumps(seg, ensure_ascii=False) + "\n"
+                        )
                 logger.info(
                     " Obtidos %d segmentos (transcrição salva em %s)",
                     len(segmentos),
@@ -227,7 +240,7 @@ class Pipeline:
             self._concatenar_segmentos(segment_files, combined_audio)
 
             # 5) mux final
-            logger.info("Realizando mix de áudio em vídeo -> %s", output_path)
+            logger.info("Realizando mux de áudio em vídeo -> %s", output_path)
             self.ffmpeg.mux_audio(str(video_path), combined_audio, str(output_path))
 
             logger.info("Execução concluída, saída em %s", output_path)
