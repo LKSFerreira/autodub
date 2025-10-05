@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from shutil import which
 
+from autodub.adapters.embedding_extractor import ResemblyzerEmbedding
 from autodub.adapters.mocks.ffmpeg_wrapper import FakeFFmpegWrapper
 from autodub.adapters.mocks.mock_tts import MockTTS
 from autodub.adapters.mocks.mock_vocoder import MockVocoder
@@ -20,7 +21,9 @@ from autodub.pipeline import Pipeline
 
 def main():
     if len(sys.argv) < 2:
-        print("Uso: poetry run python -m autodub.pipeline_manual tests/samples/video_teste.mp4")
+        print(
+            "Uso: poetry run python -m autodub.pipeline_manual tests/samples/video_teste.mp4 "
+        )
         sys.exit(1)
 
     video_entrada = Path(sys.argv[1])
@@ -48,6 +51,7 @@ def main():
         tts=MockTTS(),
         ffmpeg=ffmpeg_adapter,
         vocoder=MockVocoder(),
+        embedding=ResemblyzerEmbedding(),
     )
 
     print("🚀 Executando pipeline manual...\n")
