@@ -5,6 +5,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from autodub.pipeline import Pipeline
@@ -13,12 +14,12 @@ from autodub.pipeline import Pipeline
 class DummyASR:
     """Mock de ASR que retorna 0, 1 ou vários segmentos controláveis."""
 
-    def __init__(self, num_segments=1):
-        self.num_segments = num_segments
+    def __init__(self, num_segmentos=1):
+        self.num_segmentos = num_segmentos
 
-    def transcrever(self, audio_path: str):
+    def transcrever(self, caminho_audio: str):
         return [
-            {"texto": f"SEG{i}", "inicio": i, "fim": i + 1} for i in range(self.num_segments)
+            {"texto": f"SEG{i}", "inicio": i, "fim": i + 1} for i in range(self.num_segmentos)
         ]
 
 
@@ -29,105 +30,116 @@ class DummyTTS:
 
 
 class DummyFFmpeg:
-    def extract_audio(self, video_path, out_audio_path):
-        Path(out_audio_path).write_bytes(b"FAKE_AUDIO")
+    def extract_audio(self, caminho_video, caminho_audio_saida):
+        Path(caminho_audio_saida).write_bytes(b"FAKE_AUDIO")
 
-    def mux_audio(self, video_path, audio_path, out_video_path):
-        Path(out_video_path).write_bytes(b"FAKE_VIDEO_WITH_AUDIO")
+    def mux_audio(self, caminho_video, caminho_audio, caminho_video_saida):
+        Path(caminho_video_saida).write_bytes(b"FAKE_VIDEO_WITH_AUDIO")
+
+
+class DummyEmbedding:
+    def __init__(self, tipo_retorno="numpy"):
+        self.tipo_retorno = tipo_retorno
+
+    def extrair(self, caminho_audio: str):
+        if self.tipo_retorno == "numpy":
+            return np.array([1.0, 2.0, 3.0])
+        if self.tipo_retorno == "list":
+            return [1.0, 2.0, 3.0]
+        if self.tipo_retorno == "tuple":
+            return (1.0, 2.0, 3.0)
+        return {1.0, 2.0, 3.0}  # set para o fallback
 
 
 def test_pipeline_sem_segmentos_cria_silencio(tmp_path, monkeypatch):
     """Se ASR retornar lista vazia, pipeline deve cair no fallback do MockTTS."""
-    asr = DummyASR(num_segments=0)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=0)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    # Patch MockTTS usado por fallback para aceitar o parâmetro duration_seconds
-    class MockTTSVazia:
+    class MockEmptyTTS:
         def __init__(self, duration_seconds=None):
             pass
 
         def sintetizar(self, texto):
             return b"SILENCIO"
 
-    monkeypatch.setattr("autodub.adapters.mocks.mock_tts.MockTTS", MockTTSVazia)
+    monkeypatch.setattr("autodub.adapters.mocks.mock_tts.MockTTS", MockEmptyTTS)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
-    result = pipeline.executar(video_in, out)
-    assert result.exists()
-    assert result.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
+    resultado = pipeline_instancia.executar(video_entrada, saida)
+    assert resultado.exists()
+    assert resultado.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
 
 
 def test_pipeline_um_segmento_copia_direto(tmp_path):
     """Se ASR retornar apenas 1 segmento, pipeline deve usar shutil.copyfile."""
-    asr = DummyASR(num_segments=1)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=1)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
-    result = pipeline.executar(video_in, out)
-    assert result.exists()
-    assert result.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
+    resultado = pipeline_instancia.executar(video_entrada, saida)
+    assert resultado.exists()
+    assert resultado.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
 
 
 def test_pipeline_varios_segmentos_concatena(tmp_path, monkeypatch):
     """Simula concatenação de múltiplos segmentos sem ffmpeg real."""
-    asr = DummyASR(num_segments=3)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=3)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    # Não executa ffmpeg real
     monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
-    result = pipeline.executar(video_in, out)
-    assert result.exists()
-    assert result.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
+    resultado = pipeline_instancia.executar(video_entrada, saida)
+    assert resultado.exists()
+    assert resultado.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
 
 
-def test_save_bytes_cria_pasta(tmp_path):
+def test_salvar_bytes_cria_pasta(tmp_path):
     """Confere criação de pasta por _save_bytes."""
-    pipeline = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
-    file_path = tmp_path / "nova_pasta" / "arq.txt"
-    data = b"teste"
-    pipeline._save_bytes(data, file_path)
-    assert file_path.exists()
-    assert file_path.read_bytes() == b"teste"
+    pipeline_instancia = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
+    caminho_arquivo = tmp_path / "nova_pasta" / "arq.txt"
+    dados = b"teste"
+    pipeline_instancia._save_bytes(dados, caminho_arquivo)
+    assert caminho_arquivo.exists()
+    assert caminho_arquivo.read_bytes() == b"teste"
 
 
 def test_concatenar_segmentos_fallback(tmp_path, monkeypatch):
     """Caminho de fallback do concatenação: áudio de silêncio."""
-    pipeline = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
+    pipeline_instancia = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
 
-    # MockTTS que aceita duration_seconds para o fallback
-    class MockTTSVazia:
+    class MockEmptyTTS:
         def __init__(self, duration_seconds=None):
             pass
 
         def sintetizar(self, texto):
             return b"SILENCIO"
 
-    monkeypatch.setattr("autodub.adapters.mocks.mock_tts.MockTTS", MockTTSVazia)
+    monkeypatch.setattr("autodub.adapters.mocks.mock_tts.MockTTS", MockEmptyTTS)
     destino = tmp_path / "saida.wav"
-    pipeline._concatenar_segmentos([], destino)
+    pipeline_instancia._concatenar_segmentos([], destino)
     assert destino.read_bytes() == b"SILENCIO"
 
 
 def test_concatenar_segmentos_erro_ffmpeg(tmp_path, monkeypatch):
     """Garante branch de erro na concatenação com ffmpeg."""
-    pipeline = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
+    pipeline_instancia = Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=DummyFFmpeg())
     arq1 = tmp_path / "seg1.wav"
     arq1.write_bytes(b"AUDIO1")
     arq2 = tmp_path / "seg2.wav"
@@ -140,27 +152,26 @@ def test_concatenar_segmentos_erro_ffmpeg(tmp_path, monkeypatch):
             self.stderr = b"ERRO_FFMPEG"
 
     monkeypatch.setattr(subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(FakeError()))
-    with pytest.raises(RuntimeError) as exc:
-        pipeline._concatenar_segmentos([arq1, arq2], destino)
-    assert "Falha ao concatenar segmentos" in str(exc.value)
+    with pytest.raises(RuntimeError) as excecao:
+        pipeline_instancia._concatenar_segmentos([arq1, arq2], destino)
+    assert "Falha ao concatenar segmentos" in str(excecao.value)
 
 
 def test_pipeline_debug_true(tmp_path, monkeypatch):
     """debug=True salva transcrição; ffmpeg é patchado."""
-    asr = DummyASR(num_segments=2)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=2)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    # Patch subprocess.run para não executar ffmpeg real
     monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
-    result = pipeline.executar(video_in, out, debug=True)
-    assert result.exists()
+    resultado = pipeline_instancia.executar(video_entrada, saida, debug=True)
+    assert resultado.exists()
 
 
 def test_pipeline_init_faltando_componentes():
@@ -173,96 +184,153 @@ def test_pipeline_init_faltando_componentes():
         Pipeline(asr=DummyASR(), tts=DummyTTS(), ffmpeg=None)
 
 
-def test_pipeline_falha_cleanup_apenas_warning(tmp_path, monkeypatch, caplog):
+def test_pipeline_falha_limpeza_apenas_aviso(tmp_path, monkeypatch, caplog):
     """Se cleanup falhar, deve logar warning."""
-    asr = DummyASR(num_segments=1)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=1)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
     monkeypatch.setattr(
         shutil, "rmtree", lambda *a, **k: (_ for _ in ()).throw(OSError("falha"))
     )
 
-    import autodub.pipeline as pipeline_module
+    import autodub.pipeline as modulo_pipeline
 
-    pipeline_module.logger.propagate = True
+    modulo_pipeline.logger.propagate = True
 
     with caplog.at_level(logging.WARNING):
-        result = pipeline.executar(video_in, out)
-    assert result.exists()
+        resultado = pipeline_instancia.executar(video_entrada, saida)
+    assert resultado.exists()
     assert "Falha ao limpar temporários" in caplog.text
     assert "falha" in caplog.text
 
 
-def test_pipeline_executar_erro_e_cleanup(tmp_path, monkeypatch, caplog):
+def test_pipeline_executar_erro_e_limpeza(tmp_path, monkeypatch, caplog):
     """Força erro dentro do try para cobrir o bloco except e garantir cleanup."""
-    # Força tmpdir determinístico para poder verificar limpeza
-    fixed_tmp = tmp_path / "autodub_pipeline_fixed"
-    fixed_tmp.mkdir()
-    monkeypatch.setattr(tempfile, "mkdtemp", lambda prefix="": str(fixed_tmp))
+    temp_fixo = tmp_path / "autodub_pipeline_fixed"
+    temp_fixo.mkdir()
+    monkeypatch.setattr(tempfile, "mkdtemp", lambda prefix="": str(temp_fixo))
 
     class ExplodingASR:
-        def transcrever(self, audio_path: str):
+        def transcrever(self, caminho_audio: str):
             raise ValueError("boom")
 
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=ExplodingASR(), tts=tts, ffmpeg=ffmpeg)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=ExplodingASR(), tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
     with caplog.at_level(logging.ERROR):
         with pytest.raises(ValueError):
-            pipeline.executar(video_in, out)
+            pipeline_instancia.executar(video_entrada, saida)
 
-    # Diretório temporário deve ter sido limpo pelo finally
-    assert not fixed_tmp.exists()
+    assert not temp_fixo.exists()
 
 
-def test_colorformatter_debug_branch_coberto(caplog):
+def test_formatador_cor_ramo_debug_coberto(caplog):
     """Emite log DEBUG para exercitar o 'else' do ColorFormatter (sem cores)."""
-    import autodub.pipeline as pipeline_module
+    import autodub.pipeline as modulo_pipeline
 
-    logger = pipeline_module.logger
-    old_level = logger.level
-    old_propagate = logger.propagate
+    logger = modulo_pipeline.logger
+    nivel_antigo = logger.level
+    propagar_antigo = logger.propagate
     try:
         logger.setLevel(logging.DEBUG)
-        logger.propagate = True  # permite caplog capturar via root
+        logger.propagate = True
         with caplog.at_level(logging.DEBUG):
             logger.debug("mensagem de debug")
         assert "mensagem de debug" in caplog.text
     finally:
-        logger.setLevel(old_level)
-        logger.propagate = old_propagate
+        logger.setLevel(nivel_antigo)
+        logger.propagate = propagar_antigo
 
 
 def test_pipeline_debug_false(tmp_path, monkeypatch):
     """debug=False deve apenas logar quantidade de segmentos sem salvar arquivo."""
-    asr = DummyASR(num_segments=2)
-    tts = DummyTTS()
-    ffmpeg = DummyFFmpeg()
-    pipeline = Pipeline(asr=asr, tts=tts, ffmpeg=ffmpeg)
+    asr_simulado = DummyASR(num_segmentos=2)
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    pipeline_instancia = Pipeline(asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado)
 
-    # Evita chamar ffmpeg real
     monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
 
-    video_in = tmp_path / "input.mp4"
-    video_in.write_bytes(b"DUMMY_VIDEO")
-    out = tmp_path / "out.mp4"
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
 
-    result = pipeline.executar(video_in, out, debug=False)
+    resultado = pipeline_instancia.executar(video_entrada, saida, debug=False)
 
-    assert result.exists()
-    assert result.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
+    assert resultado.exists()
+    assert resultado.read_bytes() == b"FAKE_VIDEO_WITH_AUDIO"
 
-    # garante que não criou transcricao.jsonl no diretório
-    transcript = out.parent / "transcricao.jsonl"
-    assert not transcript.exists()
+    transcricao = saida.parent / "transcricao.jsonl"
+    assert not transcricao.exists()
+
+
+@pytest.mark.parametrize(
+    "tipo_embedding, lista_esperada",
+    [
+        ("numpy", [1.0, 2.0, 3.0]),
+        ("list", [1.0, 2.0, 3.0]),
+        ("tuple", [1.0, 2.0, 3.0]),
+        ("set", [1.0, 2.0, 3.0]),
+    ],
+)
+def test_pipeline_com_embedding_varios_tipos(
+    tmp_path, monkeypatch, tipo_embedding, lista_esperada
+):
+    """Testa o fluxo com embedding para vários tipos de retorno."""
+    asr_simulado = DummyASR()
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    embedding_simulado = DummyEmbedding(tipo_retorno=tipo_embedding)
+    pipeline_instancia = Pipeline(
+        asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado, embedding=embedding_simulado
+    )
+
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
+
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
+
+    pipeline_instancia.executar(video_entrada, saida, debug=True)
+
+    arquivo_embedding = saida.parent / "embedding.json"
+    assert arquivo_embedding.exists()
+    import json
+
+    with open(arquivo_embedding, "r") as f:
+        dados = json.load(f)
+
+    assert sorted(dados) == sorted(lista_esperada)
+
+
+def test_pipeline_com_embedding_debug_false(tmp_path, monkeypatch):
+    """Testa o fluxo com embedding e debug=False para cobrir o branch que não salva o JSON."""
+    asr_simulado = DummyASR()
+    tts_simulado = DummyTTS()
+    ffmpeg_simulado = DummyFFmpeg()
+    embedding_simulado = DummyEmbedding()
+    pipeline_instancia = Pipeline(
+        asr=asr_simulado, tts=tts_simulado, ffmpeg=ffmpeg_simulado, embedding=embedding_simulado
+    )
+
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: None)
+
+    video_entrada = tmp_path / "input.mp4"
+    video_entrada.write_bytes(b"DUMMY_VIDEO")
+    saida = tmp_path / "out.mp4"
+
+    pipeline_instancia.executar(video_entrada, saida, debug=False)
+
+    arquivo_embedding = saida.parent / "embedding.json"
+    assert not arquivo_embedding.exists()
