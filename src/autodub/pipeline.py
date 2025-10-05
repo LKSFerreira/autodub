@@ -29,6 +29,9 @@ RED = "\033[91m"
 EMOJIS = {
     "criando diretório temporário": "📂",
     "extraindo áudio": "🎵",
+    "extraindo embedding": "🧠",
+    "embedding extraído": "✨",
+    "embedding salvo": "💾",
     "transcrevendo áudio": "📝",
     "obtidos": "✂️",
     "sintetizando": "🗣️",
@@ -164,6 +167,34 @@ class Pipeline:
             logger.info("Extraindo áudio de %s -> %s", video_path, extracted_audio)
             self.ffmpeg.extract_audio(str(video_path), extracted_audio)
 
+            # se debug=True, manter uma cópia permanente do áudio extraído
+            if debug:
+                debug_audio_copy = output_path.parent / "audio_extraido.wav"
+                shutil.copyfile(extracted_audio, debug_audio_copy)
+                logger.info("🎵 Áudio extraído salvo para debug em %s", debug_audio_copy)
+
+            # 1.5) extrair embedding do locutor (apenas se houver adapter)
+            if self.embedding:
+                logger.info("Extraindo embedding do locutor a partir de %s", extracted_audio)
+                embedding_vetor = self.embedding.extrair(str(extracted_audio))
+
+                # Normaliza o tipo para lista de floats (compatível com json.dump)
+                if hasattr(embedding_vetor, "tolist"):
+                    emb_list = embedding_vetor.tolist()
+                elif isinstance(embedding_vetor, (list, tuple)):
+                    emb_list = list(embedding_vetor)
+                else:
+                    # fallback genérico
+                    emb_list = list(embedding_vetor)
+
+                logger.info("Embedding extraído: %d dimensões", len(emb_list))
+
+                if debug:
+                    emb_path = output_path.parent / "embedding.json"
+                    with open(emb_path, "w", encoding="utf-8") as f:
+                        json.dump(emb_list, f, ensure_ascii=False)
+                    logger.info("Embedding salvo para debug em %s", emb_path)
+
             # 2) transcrever
             logger.info("Transcrevendo áudio %s", extracted_audio)
             segmentos: List[Dict] = self.asr.transcrever(str(extracted_audio))
@@ -174,18 +205,18 @@ class Pipeline:
                     for seg in segmentos:
                         tf.write(json.dumps(seg, ensure_ascii=False) + "\n")
                 logger.info(
-                    "Obtidos %d segmentos (transcrição salva em %s)",
+                    " Obtidos %d segmentos (transcrição salva em %s)",
                     len(segmentos),
                     transcript_file,
                 )
             else:
-                logger.info("Obtidos %d segmentos", len(segmentos))
+                logger.info(" Obtidos %d segmentos", len(segmentos))
 
             # 3) sintetizar cada segmento
             segment_files: List[Path] = []
             for idx, seg in enumerate(segmentos):
                 texto = seg.get("texto", "")
-                logger.info("Sintetizando segmento %d: %s", idx, texto)
+                logger.info(" Sintetizando segmento %d: %s", idx, texto)
                 audio_bytes = self.tts.sintetizar(texto)
                 seg_file = tmpdir / f"segment_{idx}.wav"
                 self._save_bytes(audio_bytes, seg_file)
