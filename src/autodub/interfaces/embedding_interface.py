@@ -1,3 +1,5 @@
+# src/autodub/interfaces/embedding_interface.py
+
 """
 Interface para módulos de Extração de Embeddings de Voz.
 
