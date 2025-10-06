@@ -1,7 +1,3 @@
-"""
-Mock de alinhamento de palavras.
-"""
-
 from typing import Dict, List
 
 
