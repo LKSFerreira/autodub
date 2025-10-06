@@ -1,20 +1,35 @@
+# src/autodub/interfaces/tts_interface.py
+
 """
-Interface para módulos de Síntese de Fala.
+Interface para módulos de Síntese de Fala (Text-to-Speech, TTS).
 
-Text-to-Speech (TTS).
-
-Este contrato define como gerar áudio a partir de texto.
+Define o contrato para geração de áudio a partir de texto.
 """
 
-from typing import Protocol
+from __future__ import annotations
+
+from typing import Optional, Protocol, Union
+
+import numpy as np
 
 
 class ITts(Protocol):
-    def sintetizar(self, texto: str, caminho_saida: str) -> None:
+    """
+    Interface para sistemas de Text-to-Speech (TTS).
+    """
+
+    def sintetizar(
+        self, texto: str, embedding: Optional[Union[list, np.ndarray]] = None
+    ) -> bytes:
         """
-        Gera áudio a partir de texto.
+        Gera áudio (em bytes WAV/PCM 16kHz mono) a partir do texto e,
+        opcionalmente, condicionado a um embedding de voz.
 
         Args:
-            texto (str): Texto que será convertido em fala.
-            caminho_saida (str): Caminho do arquivo de saída (formato WAV/MP3).
+            texto (str): Texto a ser convertido em fala.
+            embedding (list | np.ndarray, opcional): Vetor de características vocais.
+
+        Returns:
+            bytes: Dados binários do áudio gerado (formato WAV PCM16 mono 16kHz).
         """
+        ...
