@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from autodub.adapters.whisper_asr import WhisperAsr
+from autodub.adapters.whisper_asr_adapter import WhisperAsr
 
 
 def test_inicializacao_com_modelo_valido():
