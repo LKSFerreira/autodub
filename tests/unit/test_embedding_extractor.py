@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from autodub.adapters.embedding_extractor import ResemblyzerEmbedding
+from autodub.adapters.embedding_extractor_adapter import ResemblyzerEmbedding
 
 
 class DummyEmbeddingExtractor:
