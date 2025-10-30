@@ -60,7 +60,6 @@ else
 fi
 
 
-
 ACTIVATION_SCRIPT_PATH=""
 
 # Detecta o sistema operacional para encontrar o script de ativação correto.
